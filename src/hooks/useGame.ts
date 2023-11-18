@@ -56,6 +56,28 @@ export const useGame = () => {
   //Realizar acción de la CPU
   const onMarkCPU = useCallback(() => {
     const availablePositions = emptyCells([...board]);
+
+    // Verificar si la CPU puede ganar en el próximo movimiento
+    for (const position of availablePositions) {
+      const newBoard = [...board];
+      newBoard[position] = "O";
+      if (checkWinner(newBoard, "O")) {
+        onMarkPosition(position, "O");
+        return;
+      }
+    }
+
+    // Verificar si el jugador puede ganar en el próximo movimiento y bloquear
+    for (const position of availablePositions) {
+      const newBoard = [...board];
+      newBoard[position] = "X";
+      if (checkWinner(newBoard, "X")) {
+        onMarkPosition(position, "O");
+        return;
+      }
+    }
+
+    // Si no hay peligro o no puede ganar, escoger posición aleatoria
     const randomPosition =
       availablePositions[Math.floor(Math.random() * availablePositions.length)];
     onMarkPosition(randomPosition, "O");
